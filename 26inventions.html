@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inventions and the World Wars – Interactive Discovery</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:#18271c;background:#f1f2ed}*{box-sizing:border-box}body{margin:0}header{text-align:center;padding:1.1rem .7rem .8rem}h1{font-size:clamp(1.25rem,3vw,2rem);margin:0 0 .35rem}header p{margin:.25rem;color:#435247;font-size:clamp(.85rem,1.7vw,1rem)}main{width:min(100%,1600px);margin:auto;padding:0 .5rem 1.2rem}.scene{position:relative;width:100%;overflow:hidden;border-radius:12px;box-shadow:0 6px 28px #0002;background:#4d4a36}.scene img{display:block;width:100%;height:auto}.hotspot{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);border:3px solid white;background:#078d28;color:white;border-radius:50%;width:clamp(21px,3.25vw,51px);height:clamp(21px,3.25vw,51px);display:grid;place-items:center;font-size:clamp(15px,2.7vw,34px);font-weight:700;line-height:1;box-shadow:0 2px 8px #0009;cursor:pointer;padding:0;transition:background .15s,scale .15s}.hotspot:hover,.hotspot:focus-visible{background:#005e1d;scale:1.13;outline:2px solid #ffeb73;outline-offset:2px}.hotspot.visited{background:#126c5d}.progress{text-align:center;font-size:.9rem;padding:.65rem;color:#405047}.overlay{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:1rem;z-index:10}.overlay.open{display:flex}.dialog{width:min(100%,520px);background:white;border-radius:16px;padding:1.3rem 1.5rem 1.5rem;box-shadow:0 15px 60px #0007;position:relative;max-height:85dvh;overflow:auto}.dialog h2{font-size:1.4rem;padding-right:2rem;margin:.25rem 0 1rem;color:#11642b}.dialog p{font-size:1.05rem;line-height:1.65;margin:0}.close{position:absolute;right:.65rem;top:.55rem;background:#eaf0e9;border:0;border-radius:50%;width:38px;height:38px;font-size:1.5rem;cursor:pointer}.close:hover,.close:focus-visible{background:#d3e2d4}footer{text-align:center;color:#536057;font-size:.78rem;padding:0 1rem 1rem}@media(max-width:600px){main{padding:0 0 1rem}.scene{border-radius:0}.hotspot{border-width:2px}.dialog{padding:1.2rem}.dialog p{font-size:1rem}}
+</style>
+</head><body>
+<header><h1>Inventions and the World Wars</h1><p>Explore the picture. Tap a green + to discover the story behind an invention.</p></header>
+<main><div class="scene" id="scene"><img src="background.png" alt="A wooden table with sixteen objects and technologies linked to the World Wars" width="1672" height="941" id="background"></div><div class="progress" id="progress" aria-live="polite">0 of 16 discoveries opened</div></main>
+<div class="overlay" id="overlay"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title" aria-describedby="dialog-text"><button class="close" id="close" aria-label="Close">×</button><h2 id="dialog-title"></h2><p id="dialog-text"></p></section></div>
+<footer>Historical note: some technologies were invented before or after the World Wars; wartime needs sometimes accelerated their development or use.</footer>
+<script>
+const items=[
+{title:'Wristwatch',x:10.6,y:40.0,text:'Wristwatches already existed before World War I, but soldiers started using them more often. They needed to check the time quickly to attack at the same moment. After the war, wristwatches became popular in everyday life.'},
+{title:'Mobile X-ray Unit',x:11.3,y:11.0,text:'During World War I, Marie Curie helped bring X-ray machines close to the battlefield. Doctors used these machines to find broken bones and pieces of metal inside soldiers’ bodies. This helped doctors treat injured soldiers faster.'},
+{title:'Paper tissues',x:22.6,y:57.9,text:'During World War I, companies made soft paper materials for medical use. After the war, similar materials were used to make paper tissues. Today, people use them to blow their noses or clean their faces.'},
+{title:'Zips',x:42.6,y:46.8,text:'Zips already existed before World War I, but they were used on some military clothes and equipment. Soldiers could open and close their clothes and bags more quickly. After the war, zips became more common in everyday clothes.'},
+{title:'Sanitary pad',x:14.2,y:70.2,text:'During World War I, nurses used a soft material to clean and cover soldiers’ wounds. They discovered that this material could also absorb menstrual blood. After the war, companies used similar materials to make sanitary pads.'},
+{title:'Duct tape',x:34.2,y:68.3,text:'During World War II, the American army needed to keep water out of ammunition boxes. A strong, waterproof tape was developed to close these boxes. Soldiers also used this tape to repair broken equipment.'},
+{title:'Super glue',x:45.8,y:68.3,text:'During World War II, an American scientist discovered a very strong glue by accident. At first, the glue was not useful because it stuck to everything. Years later, people started selling it as super glue.'},
+{title:'Slinky',x:64.6,y:64.1,text:'During World War II, an American engineer worked with metal springs for ships. One day, a spring fell and moved in a funny way. He turned this idea into a popular toy called the Slinky.'},
+{title:'Silly putty',x:55.4,y:79.5,text:'During World War II, natural rubber was difficult to find. Scientists tried to create new materials to replace rubber. One experiment produced a stretchy material that later became a popular toy.'},
+{title:'The jeep',x:47.4,y:15.9,text:'During World War II, the American army needed a small, strong vehicle. The Jeep was developed to carry soldiers and equipment across difficult roads. After the war, similar vehicles became popular with ordinary drivers.'},
+{title:'Walkie-talkies',x:50.1,y:49.9,text:'During World War II, soldiers needed to communicate without telephone wires. Portable radios were improved so soldiers could speak to each other from different places. Today, police officers and rescue workers also use walkie-talkies.'},
+{title:'Electronic computers',x:87.5,y:17.8,text:'During World War II, armies needed machines to solve difficult calculations and secret messages. Scientists developed electronic computers that could work much faster than people. These early machines helped create the modern computers we use today.'},
+{title:'Microwave oven',x:74.6,y:44.7,text:'During World War II, engineers improved radar technology to find enemy planes. After the war, an engineer discovered that radar equipment could also heat food. This discovery helped create the microwave oven.'},
+{title:'GPS',x:76.7,y:74.4,text:'During the Cold War, the American military wanted to know the exact location of vehicles and soldiers. Scientists developed a navigation system that used satellites in space. Today, we use GPS in our phones and cars to find our way.'},
+{title:'Early internet (ARPANET)',x:93.1,y:57.2,text:'During the Cold War, an American military research organisation helped develop a computer network. This network allowed computers in different places to share information. It became an important step in the development of today’s internet.'},
+{title:'Drones',x:71.9,y:9.6,text:'During World War I, inventors experimented with planes that could fly without a pilot. In 1917, a British inventor tested a plane controlled by radio, and in 1918 Americans built the Kettering Bug. These early experiments helped develop the drones we use today.'}
+];
+const scene=document.getElementById('scene'),overlay=document.getElementById('overlay'),closeBtn=document.getElementById('close'),visited=new Set();let previousFocus;
+items.forEach((item,i)=>{const b=document.createElement('button');b.className='hotspot';b.style.setProperty('--x',item.x+'%');b.style.setProperty('--y',item.y+'%');b.textContent='+';b.setAttribute('aria-label','Discover '+item.title);b.addEventListener('click',()=>{previousFocus=b;visited.add(i);b.classList.add('visited');document.getElementById('progress').textContent=`${visited.size} of ${items.length} discoveries opened`;document.getElementById('dialog-title').textContent=item.title;document.getElementById('dialog-text').textContent=item.text;overlay.classList.add('open');document.body.style.overflow='hidden';closeBtn.focus()});scene.appendChild(b)});
+function closeDialog(){overlay.classList.remove('open');document.body.style.overflow='';previousFocus?.focus()};closeBtn.addEventListener('click',closeDialog);overlay.addEventListener('click',e=>{if(e.target===overlay)closeDialog()});document.addEventListener('keydown',e=>{if(!overlay.classList.contains('open'))return;if(e.key==='Escape')closeDialog();if(e.key==='Tab'){e.preventDefault();closeBtn.focus()}});
+</script></body></html>
+
+# Inventions and the World Wars — interactive picture
+
+Free, responsive interactive hotspot image for GitHub Pages and Google Sites.
+
+## Publish on GitHub Pages
+1. Sign in at https://github.com and create a **public** repository, for example `world-war-inventions`.
+2. Choose **Add file → Upload files** and upload `index.html` and `background.png` from this folder (not the ZIP itself).
+3. Commit the files.
+4. Go to **Settings → Pages**. Under **Build and deployment**, choose **Deploy from a branch**. Select `main` and `/ (root)` and click **Save**.
+5. Once GitHub Pages has deployed, open `https://YOUR-USERNAME.github.io/world-war-inventions/` (replace YOUR-USERNAME and repository name if different).
+
+## Embed in Google Sites
+Open your Google Site, select **Insert → Embed → By URL**, paste your published GitHub Pages URL, click **Insert**, and resize the embedded frame. For best readability, use a wide frame. Publish the Google Site.
+
+## Edit the pop-ups
+Open `index.html` in a text editor. Each item in the `items` array has a `title`, `text`, and coordinates `x` and `y` (percentages of the image). Commit the edited file to GitHub to update the published page.
+
+Note: This is an educational overview. The Internet and GPS are Cold War developments, not World War I inventions.
